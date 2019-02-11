@@ -1,16 +1,15 @@
 const axios = require('axios');
-const $ = require('cheerio');
-
-const getPrices = (html) => {
-    const amazonPrices = $('#priceblock_ourprice', html);
-    const ebayPrices = $('#prcIsum', html);
-    console.log(amazonPrices);
-}
 
 const fetch = async (url) => {
-    const { data } = await axios.get(url);
-    getPrices(data);
-    //return data;
+    let fetchedData;
+    try {
+        const { data } = await axios.get(url);
+        fetchedData = data;
+    } catch(e){
+        console.log(`cannot download data from url : ${url}`);
+    }
+    return fetchedData;
+
 }
 
 module.exports = { fetch };
