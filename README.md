@@ -3,7 +3,7 @@ The reason for the separation between those 2 modules is to allow more logic to 
 I've also added the fetcher module to separate the downloading process from the rest of the logic(seems like two different actions which require a separation). 
 the scraper, which is actually the index.js file in scraper folder, use all of those sub-modules inside of it, to enable the concurrent web scraping and saves the results to the DB.
 
-I've decided to create a 'Product' class to enable modularity for the items which is saved to the DB. And also since its, the main data object with no logic behind it.
+I've decided to create a 'Product' class to enable modularity for the items which is saved to the DB. And also since its the main data object with no logic behind it.
 
 I've decided to 'mock' the DB with a single module file(db/index.js) which basically support two simple methods - save product and get a product by title. I think that this mock can be easily replaced by a real working DB pointer / ORM framework. 
 
