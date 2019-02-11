@@ -18,6 +18,9 @@
   "homepage": "https://github.com/maorRoz/scraper#readme",
   "dependencies": {
     "axios": "^0.18.0",
-    "cheerio": "^1.0.0-rc.2"
+    "chai": "^4.2.0",
+    "cheerio": "^1.0.0-rc.2",
+    "mocha": "^5.2.0",
+    "sinon": "^7.2.3"
   }
 }
