@@ -1,17 +1,20 @@
 const cheerio = require('cheerio');
+const webScrapProperties = require('./webScrapProperties');
+const scrapParser = require('./scrapParser');
 const fetcher = require('./fetcher.js');
-const amazonScraper = require('./amazonScraper');
-const ebayScraper = require('./ebayScraper');
 const db = require('../db');
 
 const scrap = (urls) => {
+  const { scrapProperties } = webScrapProperties;
   urls.forEach(async (url) => {
     const data = await fetcher.fetch(url);
     if(!data){
       return;
     }
     const $ = cheerio.load(data);
-    const product = url.includes('amazon') ? amazonScraper($) : ebayScraper($);
+    const scrapProperty = scrapProperties.find(item => url.includes(item.urlDomain));
+    const { properties } = scrapProperty || {};
+    const product = scrapParser.parse($, properties);
     db.saveProduct(product);
   });
 };

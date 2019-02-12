@@ -1,0 +1,31 @@
+{
+    "scrapProperties": [
+        {
+            "urlDomain": "amazon",
+            "properties": [
+                {
+                    "field": "title",
+                    "id": "#productTitle"
+                },
+                {
+                    "field": "price",
+                    "id": "#priceblock_ourprice"
+                 }
+             ]
+        },
+        {
+            "urlDomain": "ebay",
+            "properties": [
+               {
+                   "field": "title",
+                   "id": "#itemTitle"
+               },
+               {
+                    "field": "price",
+                    "id": "#prcIsum"
+                }
+            ]
+        }
+    ]
+
+}

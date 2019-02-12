@@ -23,7 +23,7 @@ describe('scarper tests', () => {
     const divItemPrice = `<div id="priceblock_ourprice">${itemPrice}</div>`;
     const url = 'http://www.amazon.com';
     const html = divItemTitle + divItemPrice;
-    const product = new Product(itemTitle, itemPrice);
+    const product = new Product({ title: itemTitle, price: itemPrice });
     return scrapAndCompare(url, html, product);
   });
 
@@ -32,7 +32,7 @@ describe('scarper tests', () => {
     const divItemPrice = `<div id="prcIsum">${itemPrice}</div>`;
     const url = 'http://www.ebay.com';
     const html = divItemTitle + divItemPrice;
-    const product = new Product(itemTitle, itemPrice);
+    const product = new Product({ title: itemTitle, price: itemPrice });
     return scrapAndCompare(url, html, product);
   });
 
@@ -40,6 +40,15 @@ describe('scarper tests', () => {
     const url = 'http://www.ebay.com';
     const html = undefined;
     const product = undefined;
+    return scrapAndCompare(url, html, product);
+  });
+
+  it('unknown web domain', () => {
+    const divItemTitle = `<div id="itemTitle">${itemTitle}</div>`;
+    const divItemPrice = `<div id="prcIsum">${itemPrice}</div>`;
+    const url = 'http://www.123.com';
+    const html = divItemTitle + divItemPrice;
+    const product = new Product({});
     return scrapAndCompare(url, html, product);
   });
 
