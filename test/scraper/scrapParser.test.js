@@ -1,10 +1,17 @@
 const { expect } = require('chai');
+const sinon = require('sinon');
 const cheerio = require('cheerio');
 const Product = require('../../models/Product');
 const scrapParser = require('../../scraper/scrapParser');
 
-const createAmazonProductAndComapre = (html, expectedProduct) => {
+const createProductAndCompare = (html, properties, expectedProduct) => {
+  const upload = sinon.spy();
   const $ = cheerio.load(html);
+  scrapParser.parse($, properties, upload);
+  expect(upload.calledWith(expectedProduct)).to.equal(true);
+};
+
+const createAmazonProductAndComapre = (html, expectedProduct) => {
   const properties = [
     {
       field: 'title',
@@ -15,12 +22,10 @@ const createAmazonProductAndComapre = (html, expectedProduct) => {
       id: '#priceblock_ourprice'
     }
   ];
-  const actualProduct = scrapParser.parse($, properties);
-  expect(actualProduct).to.deep.equal(expectedProduct);
+  return createProductAndCompare(html, properties, expectedProduct);
 };
 
 const createEbayProductAndComapre = (html, expectedProduct) => {
-  const $ = cheerio.load(html);
   const properties = [
     {
       field: 'title',
@@ -31,9 +36,9 @@ const createEbayProductAndComapre = (html, expectedProduct) => {
       id: '#prcIsum'
     }
   ];
-  const actualProduct = scrapParser.parse($, properties);
-  expect(actualProduct).to.deep.equal(expectedProduct);
+  return createProductAndCompare(html, properties, expectedProduct);
 };
+
 describe('scrapParser tests', () => {
   const itemTitle = 'test';
   const itemPrice = '19.99$';
@@ -93,8 +98,6 @@ describe('scrapParser tests', () => {
     const divItemPrice = `<div id="priceblock_ourprice">${itemPrice}</div>`;
     const html = divItemTitle + divItemPrice;
 
-    const $ = cheerio.load(html);
-    const actualProduct = scrapParser.parse($);
-    expect(actualProduct).to.deep.equal(new Product({}));
+    return createProductAndCompare(html, [], new Product({}));
   });
 });

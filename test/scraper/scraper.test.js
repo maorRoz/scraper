@@ -1,17 +1,17 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
+const cheerio = require('cheerio');
 const Product = require('../../models/Product');
 const fetcher = require('../../scraper/fetcher');
 const db = require('../../db');
 const scraper = require('../../scraper');
 
-const scrapAndCompare = async (url, html, expectedProduct) => {
-  sinon.stub(fetcher, 'fetch').callsFake(() => html);
-  let actualProduct;
-  sinon.stub(db, 'saveProduct').callsFake((product) => { actualProduct = product; });
+const scrapAndCompare = (urlInput, html, expectedProduct) => {
+  sinon.stub(fetcher, 'fetch').callsFake((url, parse) => html ? parse(url, cheerio.load(html)) : undefined);
+  const saveProductSpy = sinon.stub(db, 'saveProduct').callsFake(() => undefined);
 
-  await scraper.scrap([url]);
-  expect(actualProduct).to.deep.equal(expectedProduct);
+  scraper.scrap([urlInput]);
+  return html ? sinon.assert.calledWith(saveProductSpy, expectedProduct) : sinon.assert.notCalled(saveProductSpy);
 };
 
 describe('scarper tests', () => {
@@ -33,13 +33,6 @@ describe('scarper tests', () => {
     const url = 'http://www.ebay.com';
     const html = divItemTitle + divItemPrice;
     const product = new Product({ title: itemTitle, price: itemPrice });
-    return scrapAndCompare(url, html, product);
-  });
-
-  it('error when fetching', () => {
-    const url = 'http://www.ebay.com';
-    const html = undefined;
-    const product = undefined;
     return scrapAndCompare(url, html, product);
   });
 

@@ -1,12 +1,14 @@
 const Product = require('../models/Product');
 
-const parse = ($, properties = []) => {
+const parse = ($, properties = [], upload) => {
   const itemData = {};
   properties.forEach((property) => {
     const { field, id } = property;
     itemData[field] = $(id).text();
   });
-  return new Product(itemData);
+
+  const product = new Product(itemData);
+  return upload(product);
 };
 
 module.exports = {
